@@ -15,7 +15,7 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
 
     @IBOutlet weak var collectionView: UICollectionView!
 //    This is where we will be storying the json that we retrieved
-    var movies: [NSDictionary]?
+    var movies = [NSDictionary]()
     var dataTest: [String]!
     var filteredData: [String]!
     
@@ -40,28 +40,23 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
- 
+
+//------------------------------------------------------------------------------
+
     @available(iOS 6.0, *)
     internal func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if let movies = movies {
-                return movies.count - 1
-        } else {
-                return 0
-        }
-            
         
+                return movies.count
     }
   
+//------------------------------------------------------------------------------
     
     
     @available(iOS 6.0, *)
-    
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
-        
-        
+
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCell",forIndexPath: indexPath) as! MovieCell
-        let movie = movies![indexPath.row]
+        let movie = movies[indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         
@@ -71,14 +66,13 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
             cell.poserView.setImageWithURL(imageURL!)
 
         }
-                
-                
+        
         print("row \(indexPath.row)")
         return cell
         
         
     }
-    
+//------------------------------------------------------------------------------
     func loadDataFromNetwork() {
         
         // ... Create the NSURLRequest (myRequest) ...
@@ -112,8 +106,7 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
         });
         task.resume()
     }
-    
-    
+//------------------------------------------------------------------------------
     func refreshControlAction(refreshControl: UIRefreshControl) {
         
         // ... Create the NSURLRequest (myRequest) ...
@@ -145,7 +138,8 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
         });
         task.resume()
     }
-    
+//------------------------------------------------------------------------------
+
     
     // MARK: - Navigation
     
@@ -154,7 +148,7 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
          
             let cell = sender as! UICollectionViewCell
             let indexPath = collectionView.indexPathForCell(cell)
-            let  movie = movies![indexPath!.row]
+            let  movie = movies[indexPath!.row]
             let detailViewController = segue.destinationViewController as! DetailViewController
             detailViewController.movies = movie
             

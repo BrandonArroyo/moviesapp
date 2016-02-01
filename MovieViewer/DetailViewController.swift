@@ -30,6 +30,7 @@ class DetailViewController: UIViewController {
         
     
     }
+//------------------------------------------------------------------------------
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
