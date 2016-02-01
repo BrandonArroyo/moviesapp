@@ -17,24 +17,18 @@ class DetailViewController: UIViewController {
     var movies: NSDictionary!
     
     override func viewDidLoad() {
-       
         super.viewDidLoad()
-        let title = movies["title"] as! String
+        
         let overview = movies["overview"] as! String
         overviewLabel.text = overview
-       
-        
-        
-        
+// make sure that the poster path is there before we try and load it
         if let posterPath = movies["poster_path"] as? String{
             let baseURL = "http://image.tmdb.org/t/p/w500/"
             let imageURL = NSURL(string: baseURL + posterPath)
             posterimage.setImageWithURL(imageURL!)
-            
         }
         
-        
-        // Do any additional setup after loading the view.
+    
     }
 
     override func didReceiveMemoryWarning() {
