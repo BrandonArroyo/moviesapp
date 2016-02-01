@@ -10,49 +10,32 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollectionViewDelegate,UISearchBarDelegate {
 
-    @IBOutlet weak var tableView: UITableView!
-    
+
+    @IBOutlet weak var collectionView: UICollectionView!
 //    This is where we will be storying the json that we retrieved
     var movies: [NSDictionary]?
+    var dataTest: [String]!
+    var filteredData: [String]!
     
+    
+    @IBOutlet weak var searchBar: UISearchBar!
     
  //------------------------------------------------------------------------------
     override func viewDidLoad() {
         super.viewDidLoad()
+//        navigationController!.navigationBar.barTintColor = UIColor.blackColor()
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        loadDataFromNetwork()
+        collectionView.dataSource = self
+        collectionView.delegate = self
+                loadDataFromNetwork()
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
+        collectionView.insertSubview(refreshControl, atIndex: 0)
         // Do any additional setup after loading the view.
         
-//        let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-//        let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
-//        let request = NSURLRequest(URL: url!)
-//        let session = NSURLSession(
-//            configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
-//            delegate:nil,
-//            delegateQueue:NSOperationQueue.mainQueue()
-//        )
-//        
-//        let task : NSURLSessionDataTask = session.dataTaskWithRequest(request,
-//            completionHandler: { (dataOrNil, response, error) in
-//                if let data = dataOrNil {
-//                    if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-//                        data, options:[]) as? NSDictionary {
-//                            NSLog("response: \(responseDictionary)")
-//                            
-//                            self.movies = responseDictionary["results"] as! [NSDictionary]
-//                            self.tableView.reloadData()
-//                    }
-//                }
-//        });
-//        task.resume()
-        
+
     }
     
 //------------------------------------------------------------------------------
@@ -62,41 +45,49 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+ 
+    @available(iOS 6.0, *)
+    internal func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         if let movies = movies{
-            return movies.count
+                return movies.count - 1
             
         }else{
-         return 0
-        }
+                return 0
+             }
+            
+        
+    }
+  
+    
+    // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+    @available(iOS 6.0, *)
+    
+    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
+        
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCell",forIndexPath: indexPath) as! MovieCell
+        
+        
+            let movie = movies![indexPath.row]
+            let title = movie["title"] as! String
+            let overview = movie["overview"] as! String
+            if let posterPath = movie["poster_path"] as? String{
+                let baseURL = "http://image.tmdb.org/t/p/w500/"
+                let imageURL = NSURL(string: baseURL + posterPath)
+                cell.poserView.setImageWithURL(imageURL!)
+
+            }
+//                cell.titleLabel.text = title
+//              cell.overviewLabel.text = overview
+        
+                
+                
+                print("row \(indexPath.row)")
+                return cell
+        
         
     }
     
-    
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell",forIndexPath: indexPath) as! MovieCell
-        
-        
-        let movie = movies![indexPath.row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"] as! String
-        let baseURL = "http://image.tmdb.org/t/p/w500/"
-        
-        let imageURL = NSURL(string: baseURL + posterPath)
-        
-        cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.poserView.setImageWithURL(imageURL!)
-       
-        
-        
-        print("row \(indexPath.row)")
-        return cell
-    }
     func loadDataFromNetwork() {
         
         // ... Create the NSURLRequest (myRequest) ...
@@ -123,10 +114,16 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            NSLog("response: \(responseDictionary)")
+//                            NSLog("response: \(responseDictionary)")
                             
                             self.movies = responseDictionary["results"] as! [NSDictionary]
-                            self.tableView.reloadData()
+                            
+                            
+                            
+                            
+                            
+                            
+                            self.collectionView.reloadData()
                     }
                 }
                 // ... Remainder of response handling code ...
@@ -161,17 +158,33 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
                             NSLog("response: \(responseDictionary)")
                             
                             self.movies = responseDictionary["results"] as! [NSDictionary]
-                            self.tableView.reloadData()
+                            self.collectionView.reloadData()
                     }
                 }
                 // Reload the tableView now that there is new data
-                self.tableView.reloadData()
+                self.collectionView.reloadData()
                 
                 // Tell the refreshControl to stop spinning
                 refreshControl.endRefreshing()	
         });
         task.resume()
     }
+    
+    
+    // MARK: - Navigation
+    
+//     In a storyboard-based application, you will often want to do a little preparation before navigation
+        override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+            // Get the new view controller using segue.destinationViewController.
+            // Pass the selected object to the new view controller.
+            let cell = sender as! UICollectionViewCell
+            let indexPath = collectionView.indexPathForCell(cell)
+            let  movie = movies![indexPath!.row]
+            let detailViewController = segue.destinationViewController as! DetailViewController
+            detailViewController.movies = movie
+            
+            
+        }
     
 
 
