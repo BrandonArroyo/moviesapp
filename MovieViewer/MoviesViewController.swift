@@ -63,7 +63,29 @@ class MoviesViewController: UIViewController,UICollectionViewDataSource,UICollec
         if let posterPath = movie["poster_path"] as? String{
             let baseURL = "http://image.tmdb.org/t/p/w500/"
             let imageURL = NSURL(string: baseURL + posterPath)
-            cell.poserView.setImageWithURL(imageURL!)
+//            cell.poserView.setImageWithURL(imageURL!)
+            let imageRequest = NSURLRequest(URL: imageURL!)
+            cell.poserView.setImageWithURLRequest(
+                imageRequest,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        print("Image was NOT cached, fade in image")
+                        cell.poserView.alpha = 0.0
+                        cell.poserView.image = image
+                        UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            cell.poserView.alpha = 1.0
+                        })
+                    } else {
+                        print("Image was cached so just update the image")
+                        cell.poserView.image = image
+                    }
+                },
+                failure: { (imageRequest, imageResponse, error) -> Void in
+                    // do something for the failure condition
+            })
 
         }
         
