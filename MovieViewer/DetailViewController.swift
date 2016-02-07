@@ -22,12 +22,16 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: infoView.frame.origin.y + infoView.frame.height  ) 
         let overview = movies["overview"] as! String
+        
+        let title = movies["title"] as? String
+        titleLabel.text = title
         overviewLabel.text = overview
+        overviewLabel.sizeToFit()
 // make sure that the poster path is there before we try and load it
         if let posterPath = movies["poster_path"] as? String{
             let baseURL = "http://image.tmdb.org/t/p/w500/"
             let imageURL = NSURL(string: baseURL + posterPath)
-
+            
             let imageRequest = NSURLRequest(URL: imageURL!)
             self.posterimage.setImageWithURLRequest(
                 imageRequest,
