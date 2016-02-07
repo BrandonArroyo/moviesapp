@@ -1,36 +1,33 @@
-# Project 1 - *The Movie App*
+# Project 2 - *The Movie App*
 
-**The Movie App** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
+**The Movie App** is a movies app displaying box office and top rental DVDs using [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **7** hours spent in total
+Time spent: **8** hours spent in total
 
 ## User Stories
 
-The following **required** functionality is complete:
+The following **required** functionality is completed:
 
-- [x] User can view a list of movies currently playing in theaters from The Movie Database.
-- [x] Poster images are loaded using the UIImageView category in the AFNetworking library.
-- [x] User sees a loading state while waiting for the movies API.(its there but hard to see)
-- [x] User can pull to refresh the movie list.
+- [x] User can view movie details by tapping on a cell.
+- [x] User can select from a tab bar for either **Now Playing** or **Top Rated** movies.
+- [x] Customize the selection effect of the cell.
 
 The following **optional** features are implemented:
 
-- [ ] User sees an error message when there's a networking error.
-- [x] Movies are displayed using a CollectionView instead of a TableView.
-- [ ] User can search for a movie.
-- [ ] All images fade in as they are loading.
-- [ ] Customize the UI.
+- [ ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
+- [ ] Customize the navigation bar.
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] fade in when loading images
+
 
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/E8xoL4e.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/9mXnp3g.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -40,7 +37,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
-    Copyright [2016] [Brandon Arroyo]
+    Copyright [2016] [brandon Arroyo]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
